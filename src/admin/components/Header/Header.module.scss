@@ -1,0 +1,32 @@
+@import '../../../var';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.menuItem {
+  list-style: none;
+  & + & {
+    margin-left: 30px;
+  }
+}
+.menuLink {
+  color: #000;
+  text-decoration: none;
+  font-size: 18px;
+}
+.menuLinkActive {
+  color: $blue;
+}
+.logout {
+  & svg {
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,40 @@
+@import '../../../var';
+
+.wrapper {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.addAttributeNewBox {
+  display: flex;
+  margin-bottom: 20px;
+  & button {
+    margin-left: 20px;
+  }
+}
+.addAttributeBox {
+  grid-column: 1/2;
+  grid-row: 2/3;
+}
+.addSelectBox {
+  display: grid;
+  justify-content: start;
+  grid-gap: 20px;
+  margin-top: 20px;
+}
+.addBtn {
+  grid-column: 1/3;
+  grid-row: 3/4;
+}
+.headerBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
