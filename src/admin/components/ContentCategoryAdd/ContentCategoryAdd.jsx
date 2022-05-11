@@ -78,6 +78,8 @@ const ContentCategoryAdd = () => {
           attributes: categoryAttributes,
         }),
       );
+      setActiveAttribute({ name: '', type: 'text' });
+      setActiveSelectOptions([]);
       dispatch(categoryReset());
       dispatch(attributeReset());
       navigate('/admin/categories');
@@ -93,6 +95,8 @@ const ContentCategoryAdd = () => {
           attributes: categoryAttributes,
         }),
       );
+      setActiveAttribute({ name: '', type: 'text' });
+      setActiveSelectOptions([]);
       dispatch(categoryReset());
       dispatch(attributeReset());
       navigate('/admin/categories');

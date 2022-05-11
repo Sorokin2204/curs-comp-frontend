@@ -1,0 +1,12 @@
+@import '../../../var';
+
+.addProduct {
+  position: fixed !important;
+  bottom: 30px;
+  right: 30px;
+  background-color: $blue !important;
+  & svg {
+    font-size: 50px;
+    color: white;
+  }
+}

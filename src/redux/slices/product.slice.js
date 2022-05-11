@@ -1,48 +1,126 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-const axios = require('axios');
-
-export const getProducts = createAsyncThunk('product/playerListLoading', (productId) =>
-  axios
-    .get(`https://api.opendota.com/api/products/${productId}/players`)
+import axios from 'axios';
+export const createProduct = createAsyncThunk('product/createProduct', (formData, { rejectWithValue }) => {
+  return axios
+    .post(`http://localhost:8080/api/product/create`, formData)
     .then((response) => response.data)
-    .catch((error) => error),
-);
+    .catch((error) => rejectWithValue(error.response.data));
+});
+export const updateProduct = createAsyncThunk('product/updateProduct', (formData, { rejectWithValue }) => {
+  return axios
+    .post(`http://localhost:8080/api/product/update`, formData)
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
 
+export const getProducts = createAsyncThunk('product/getProducts', (obj, { rejectWithValue }) => {
+  return axios
+    .get(`http://localhost:8080/api/product/list`)
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
 const productInitialState = {
-  playerList: {
-    status: 'idle',
-    data: {},
-    error: {},
+  createProductState: {
+    data: null,
+    loading: false,
+    error: null,
   },
+  updateProductState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  getProductsState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  activeProduct: null,
 };
 
 const productSlice = createSlice({
-  name: 'user',
+  name: 'product',
   initialState: productInitialState,
-  reducers: {},
+  reducers: {
+    setActiveProduct: (state, { payload }) => {
+      state.activeProduct = { ...payload };
+    },
+    productReset: (state, action) => {
+      state.createProductState = productInitialState.createProductState;
+      state.updateProductState = productInitialState.updateProductState;
+      state.activeProduct = null;
+    },
+  },
   extraReducers: {
-    [fetchPlayerList.pending.type]: (state, action) => {
-      state.playerList = {
-        status: 'loading',
-        data: {},
-        error: {},
+    // CREATE
+    [createProduct.pending]: (state, action) => {
+      state.createProductState = {
+        loading: true,
+        data: null,
+        error: null,
       };
     },
-    [fetchPlayerList.fulfilled.type]: (state, action) => {
-      state.playerList = {
-        status: 'idle',
+    [createProduct.fulfilled]: (state, action) => {
+      state.createProductState = {
+        loading: false,
         data: action.payload,
-        error: {},
+        error: null,
+      };
+      state.productModal = false;
+    },
+    [createProduct.rejected]: (state, action) => {
+      state.createProductState = {
+        loading: false,
+        data: null,
+        error: action.payload,
       };
     },
-    [fetchPlayerList.rejected.type]: (state, action) => {
-      state.playerList = {
-        status: 'idle',
-        data: {},
+    // GET
+    [getProducts.pending]: (state, action) => {
+      state.getProductsState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [getProducts.fulfilled]: (state, action) => {
+      state.getProductsState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+    },
+    [getProducts.rejected]: (state, action) => {
+      state.getProductsState = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    // UPDATE
+    [updateProduct.pending]: (state, action) => {
+      state.updateProductState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [updateProduct.fulfilled]: (state, action) => {
+      state.updateProductState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+      state.productModal = false;
+    },
+    [updateProduct.rejected]: (state, action) => {
+      state.updateProductState = {
+        loading: false,
+        data: null,
         error: action.payload,
       };
     },
   },
 });
-
-export default productSlice;
+export const { productReset, closeProductModal, openProductModal, setActiveProduct } = productSlice.actions;
+export const productReducer = productSlice.reducer;

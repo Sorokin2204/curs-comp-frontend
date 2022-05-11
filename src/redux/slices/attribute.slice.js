@@ -27,6 +27,12 @@ export const getCategoryAttributes = createAsyncThunk('attribute/getCategoryAttr
     .then((response) => response.data)
     .catch((error) => rejectWithValue(error.response.data));
 });
+export const getProductAttributes = createAsyncThunk('attribute/getProductAttributes', (productId, { rejectWithValue }) => {
+  return axios
+    .get(`http://localhost:8080/api/attribute?productId=${productId}`)
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
 const attributeInitialState = {
   createAttributeState: {
     data: null,
@@ -44,6 +50,11 @@ const attributeInitialState = {
     error: null,
   },
   getCategoryAttributes: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  getProductAttributesState: {
     data: null,
     loading: false,
     error: null,
@@ -127,7 +138,8 @@ const attributeSlice = createSlice({
         data: null,
         error: action.payload,
       };
-    }, // UPDATE
+    },
+    // UPDATE
     [getCategoryAttributes.pending]: (state, action) => {
       state.getCategoryAttributes = {
         loading: true,
@@ -149,6 +161,28 @@ const attributeSlice = createSlice({
     },
     [getCategoryAttributes.rejected]: (state, action) => {
       state.getCategoryAttributes = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    // UPDATE
+    [getProductAttributes.pending]: (state, action) => {
+      state.getProductAttributesState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [getProductAttributes.fulfilled]: (state, action) => {
+      state.getProductAttributesState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+    },
+    [getProductAttributes.rejected]: (state, action) => {
+      state.getProductAttributesState = {
         loading: false,
         data: null,
         error: action.payload,

@@ -49,6 +49,7 @@ const categorySlice = createSlice({
     categoryReset: (state, action) => {
       state.createCategoryState = categoryInitialState.createCategoryState;
       state.updateCategoryState = categoryInitialState.updateCategoryState;
+      state.getCategoriesState = categoryInitialState.getCategoriesState;
       state.activeCategory = null;
       state.categoryAttributes = [];
     },
