@@ -25,7 +25,7 @@ const TableOption = ({ options, onRemove }) => {
             <TableBody>
               {options.map((option) => (
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, minHeight: '51px', height: '50px', ...(option?.status === 'added' && { backgroundColor: 'success.light', color: 'white' }), ...(option?.status === 'deleted' && { backgroundColor: 'error.light', color: 'white' }) }}>
-                  <TableCell>{option.name}</TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{option.name}</TableCell>
                   <TableCell sx={{ minHeight: '51px', height: '50px', minWidth: '50px', width: '50px' }}>
                     {option?.status !== 'deleted' && (
                       <IconButton

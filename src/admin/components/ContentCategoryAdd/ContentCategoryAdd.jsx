@@ -114,7 +114,7 @@ const ContentCategoryAdd = () => {
   const { categoryAttributes } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   return (
-    <div className="container">
+    <>
       <div className={clsx(styles.headerBox)}>
         <h2 className={clsx(styles.title)}>{activeCategory ? `Изменить категорию "${activeCategory?.name}"` : 'Новая категория'}</h2>
         <Button
@@ -261,7 +261,7 @@ const ContentCategoryAdd = () => {
           {categoryError?.message ? categoryError?.message : attributeError?.message ? attributeError?.message : categoryAttributesError?.message ? categoryAttributesError?.message : ''}
         </Alert>
       </Snackbar>
-    </div>
+    </>
   );
 };
 

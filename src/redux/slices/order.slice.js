@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-export const createOrder = createAsyncThunk('order/createOrder', (orderName, { rejectWithValue }) => {
+export const createOrder = createAsyncThunk('order/createOrder', (order, { rejectWithValue }) => {
   return axios
-    .post(`http://localhost:8080/api/order/create`, { name: orderName })
+    .post(`http://localhost:8080/api/order/create`, order)
     .then((response) => response.data)
     .catch((error) => rejectWithValue(error.response.data));
 });
@@ -23,6 +23,13 @@ export const getOrders = createAsyncThunk('order/getOrders', (obj, { rejectWithV
 export const getOrderSingle = createAsyncThunk('order/getOrderSingle', (orderId, { rejectWithValue }) => {
   return axios
     .get(`http://localhost:8080/api/order/${orderId}`)
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
+
+export const getUserOrders = createAsyncThunk('order/getUserOrders', (userId, { rejectWithValue }) => {
+  return axios
+    .get(`http://localhost:8080/api/order/list/${userId}`)
     .then((response) => response.data)
     .catch((error) => rejectWithValue(error.response.data));
 });
@@ -48,6 +55,11 @@ const orderInitialState = {
     loading: false,
     error: null,
   },
+  getUserOrdersState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
   activeOrder: null,
 };
 
@@ -58,6 +70,8 @@ const orderSlice = createSlice({
     orderReset: (state, action) => {
       state.createOrderState = orderInitialState.createOrderState;
       state.updateStatusOrderState = orderInitialState.updateStatusOrderState;
+      state.getUserOrdersState = orderInitialState.getUserOrdersState;
+      state.getUserOrdersState = orderInitialState.getOrderSingleState;
       state.activeOrder = null;
     },
     setActiveOrder: (state, { payload }) => {
@@ -151,6 +165,29 @@ const orderSlice = createSlice({
     },
     [getOrderSingle.rejected]: (state, action) => {
       state.getOrderSingleState = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    // GET USER ORDERS
+    [getUserOrders.pending]: (state, action) => {
+      state.getUserOrdersState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [getUserOrders.fulfilled]: (state, action) => {
+      state.getUserOrdersState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+      state.orderModal = false;
+    },
+    [getUserOrders.rejected]: (state, action) => {
+      state.getUserOrdersState = {
         loading: false,
         data: null,
         error: action.payload,

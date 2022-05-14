@@ -14,6 +14,13 @@ export const updateCategory = createAsyncThunk('category/updateCategory', (categ
     .catch((error) => rejectWithValue(error.response.data));
 });
 
+export const deleteCategory = createAsyncThunk('category/deleteCategory', (categoryId, { rejectWithValue }) => {
+  return axios
+    .post(`http://localhost:8080/api/category/delete`, { id: categoryId })
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
+
 export const getCategories = createAsyncThunk('category/getCategories', (obj, { rejectWithValue }) => {
   return axios
     .get(`http://localhost:8080/api/category/list`)
@@ -28,6 +35,11 @@ const categoryInitialState = {
     error: null,
   },
   updateCategoryState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  deleteCategoryState: {
     data: null,
     loading: false,
     error: null,
@@ -138,6 +150,28 @@ const categorySlice = createSlice({
     },
     [updateCategory.rejected]: (state, action) => {
       state.updateCategoryState = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    // DELETE
+    [deleteCategory.pending]: (state, action) => {
+      state.deleteCategoryState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [deleteCategory.fulfilled]: (state, action) => {
+      state.deleteCategoryState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+    },
+    [deleteCategory.rejected]: (state, action) => {
+      state.deleteCategoryState = {
         loading: false,
         data: null,
         error: action.payload,

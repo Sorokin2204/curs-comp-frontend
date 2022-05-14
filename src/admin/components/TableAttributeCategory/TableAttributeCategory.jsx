@@ -59,7 +59,7 @@ const TableAttributeCategory = ({ onEdit, onRemove, activeAttribute }) => {
                     ...(attribute?.status === 'deleted' && { backgroundColor: 'error.light', color: 'white' }),
                     ...(attribute?.status === 'added' && { backgroundColor: 'success.light', color: 'white' }),
                   }}>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" sx={{ whiteSpace: 'nowrap' }}>
                     {attribute.name}
                   </TableCell>
                   <TableCell>{getNameTypeAttribute(attribute.type)}</TableCell>

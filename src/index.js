@@ -7,14 +7,16 @@ import { CssBaseline } from '@mui/material';
 import Wrapper from './admin/Wrapper';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
+import { SocketContext, socket } from './socket';
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
-  <Router>
-    <CssBaseline />
-    <Provider store={store}>
-      <Wrapper>
+  <SocketContext.Provider value={socket}>
+    <Router>
+      <CssBaseline />
+      <Provider store={store}>
         <App />
-      </Wrapper>
-    </Provider>
-  </Router>,
+      </Provider>
+    </Router>
+  </SocketContext.Provider>,
 );

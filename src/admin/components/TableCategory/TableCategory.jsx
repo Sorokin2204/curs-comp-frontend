@@ -8,15 +8,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Edit } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBrands, setActiveBrand, setActiveCategory } from '../../../redux/slices/category.slice';
+import { deleteCategory, getBrands, setActiveBrand, setActiveCategory } from '../../../redux/slices/category.slice';
 import { getCategories } from '../../../redux/slices/category.slice';
 import { useNavigate } from 'react-router';
+import Loading from '../Loading/Loading';
 const TableCategory = () => {
   const {
     getCategoriesState: { data, loading },
+    deleteCategoryState: { data: deleteData, loading: deleteLoading },
   } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,6 +33,7 @@ const TableCategory = () => {
           <Table sx={{ width: '100%' }}>
             <TableHead>
               <TableRow>
+                <TableCell sx={{ width: '40px' }}></TableCell>
                 <TableCell sx={{ width: '40px' }}></TableCell>
                 <TableCell sx={{ width: '50px' }}>ID</TableCell>
                 <TableCell>Название</TableCell>
@@ -53,6 +56,15 @@ const TableCategory = () => {
                       <Edit />
                     </IconButton>
                   </TableCell>
+                  <TableCell sx={{ width: '40px' }}>
+                    <IconButton
+                      onClick={() => {
+                        dispatch(deleteCategory(category.id));
+                        dispatch(getCategories());
+                      }}>
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
                   <TableCell component="th" scope="row" sx={{ width: '50px' }}>
                     {category.id}
                   </TableCell>
@@ -63,6 +75,7 @@ const TableCategory = () => {
           </Table>
         </TableContainer>
       )}
+      {deleteLoading && <Loading />}
     </>
   );
 };

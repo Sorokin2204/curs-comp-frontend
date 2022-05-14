@@ -13,6 +13,13 @@ export const updateBrand = createAsyncThunk('brand/updateBrand', (brand, { rejec
     .catch((error) => rejectWithValue(error.response.data));
 });
 
+export const deleteBrand = createAsyncThunk('brand/deleteBrand', (brandId, { rejectWithValue }) => {
+  return axios
+    .post(`http://localhost:8080/api/brand/delete`, { id: brandId })
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
+
 export const getBrands = createAsyncThunk('brand/getBrands', (obj, { rejectWithValue }) => {
   return axios
     .get(`http://localhost:8080/api/brand/list`)
@@ -27,6 +34,11 @@ const brandInitialState = {
     error: null,
   },
   updateBrandState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  deleteBrandState: {
     data: null,
     loading: false,
     error: null,
@@ -47,6 +59,7 @@ const brandSlice = createSlice({
     brandReset: (state, action) => {
       state.createBrandState = brandInitialState.createBrandState;
       state.updateBrandState = brandInitialState.updateBrandState;
+      state.deleteBrandState = brandInitialState.deleteBrandState;
       state.activeBrand = null;
     },
     closeBrandModal: (state) => {
@@ -125,6 +138,29 @@ const brandSlice = createSlice({
     },
     [updateBrand.rejected]: (state, action) => {
       state.updateBrandState = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    // DELETE
+    [deleteBrand.pending]: (state, action) => {
+      state.deleteBrandState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [deleteBrand.fulfilled]: (state, action) => {
+      state.deleteBrandState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+      state.brandModal = false;
+    },
+    [deleteBrand.rejected]: (state, action) => {
+      state.deleteBrandState = {
         loading: false,
         data: null,
         error: action.payload,

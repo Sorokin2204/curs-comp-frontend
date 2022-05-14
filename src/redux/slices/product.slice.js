@@ -13,12 +13,34 @@ export const updateProduct = createAsyncThunk('product/updateProduct', (formData
     .catch((error) => rejectWithValue(error.response.data));
 });
 
-export const getProducts = createAsyncThunk('product/getProducts', (obj, { rejectWithValue }) => {
+export const deleteProduct = createAsyncThunk('product/deleteProduct', (productId, { rejectWithValue }) => {
   return axios
-    .get(`http://localhost:8080/api/product/list`)
+    .post(`http://localhost:8080/api/product/delete`, { id: productId })
     .then((response) => response.data)
     .catch((error) => rejectWithValue(error.response.data));
 });
+
+export const getProducts = createAsyncThunk('product/getProducts', (params, { rejectWithValue }) => {
+  return axios
+    .get(`http://localhost:8080/api/product/list`, { params: { ...params } })
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
+
+export const getSingleProduct = createAsyncThunk('product/getSingleProduct', (productId, { rejectWithValue }) => {
+  return axios
+    .get(`http://localhost:8080/api/product/${productId}`)
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
+
+export const searchProducts = createAsyncThunk('product/searchProducts', (search, { rejectWithValue }) => {
+  return axios
+    .get(`http://localhost:8080/api/product/search/${search}`)
+    .then((response) => response.data)
+    .catch((error) => rejectWithValue(error.response.data));
+});
+
 const productInitialState = {
   createProductState: {
     data: null,
@@ -31,6 +53,21 @@ const productInitialState = {
     error: null,
   },
   getProductsState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  getSingleProductState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  searchProductsState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  deleteProductState: {
     data: null,
     loading: false,
     error: null,
@@ -48,6 +85,10 @@ const productSlice = createSlice({
     productReset: (state, action) => {
       state.createProductState = productInitialState.createProductState;
       state.updateProductState = productInitialState.updateProductState;
+      state.getProductsState = productInitialState.getProductsState;
+      state.getSingleProductState = productInitialState.getSingleProductState;
+      state.searchProductsState = productInitialState.searchProductsState;
+      state.deleteProductState = productInitialState.deleteProductState;
       state.activeProduct = null;
     },
   },
@@ -115,6 +156,73 @@ const productSlice = createSlice({
     },
     [updateProduct.rejected]: (state, action) => {
       state.updateProductState = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    [getSingleProduct.pending]: (state, action) => {
+      state.getSingleProductState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [getSingleProduct.fulfilled]: (state, action) => {
+      state.getSingleProductState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+      state.productModal = false;
+    },
+    [getSingleProduct.rejected]: (state, action) => {
+      state.getSingleProductState = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    [searchProducts.pending]: (state, action) => {
+      state.searchProductsState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [searchProducts.fulfilled]: (state, action) => {
+      state.searchProductsState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+      state.productModal = false;
+    },
+    [searchProducts.rejected]: (state, action) => {
+      state.searchProductsState = {
+        loading: false,
+        data: null,
+        error: action.payload,
+      };
+    },
+    // DELETE
+    [deleteProduct.pending]: (state, action) => {
+      state.deleteProductState = {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    },
+    [deleteProduct.fulfilled]: (state, action) => {
+      state.deleteProductState = {
+        loading: false,
+        data: action.payload,
+        error: null,
+      };
+      state.productModal = false;
+    },
+    [deleteProduct.rejected]: (state, action) => {
+      state.deleteProductState = {
         loading: false,
         data: null,
         error: action.payload,

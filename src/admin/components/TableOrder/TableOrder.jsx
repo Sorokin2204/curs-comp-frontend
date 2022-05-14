@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './TableOrder.module.scss';
 import Table from '@mui/material/Table';
@@ -14,6 +14,7 @@ import { getOrders, getOrderSingle, setActiveOrder } from '../../../redux/slices
 import { useDispatch, useSelector } from 'react-redux';
 import OrderInfo from '../OrderInfo/OrderInfo';
 import Loading from '../Loading/Loading';
+import { SocketContext } from '../../../socket';
 
 export const typeOrder = (type) => {
   switch (type) {
@@ -31,6 +32,7 @@ export const typeOrder = (type) => {
 
 const TableOrder = () => {
   const [openOrderInfo, setOpenOrderInfo] = useState(false);
+  const socket = useContext(SocketContext);
   const {
     getOrdersState: { data, loading },
     getOrderSingleState: { data: orderSingleData, loading: orderSingleLoading },
@@ -38,8 +40,9 @@ const TableOrder = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    socket.on('REFRESH_ORDERS', () => dispatch(getOrders()));
     dispatch(getOrders());
-  }, []);
+  }, [socket]);
 
   return (
     <>

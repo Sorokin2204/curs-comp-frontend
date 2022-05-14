@@ -289,6 +289,7 @@ const ContentProductAdd = () => {
             onValueChange={({ floatValue }) => {
               setProductPrice(floatValue);
             }}
+            autoComplete="off"
             value={productPrice}
             thousandSeparator={' '}
             suffix={' руб'}
@@ -327,7 +328,7 @@ const ContentProductAdd = () => {
         </div>
       </div>
 
-      {productLoading || (updateProductLoading && <Loading />)}
+      {(productLoading || updateProductLoading) && <Loading />}
       <Snackbar autoHideDuration={2000} open={openError} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} onClose={() => setOpenError(false)}>
         <Alert onClose={() => setOpenError(false)} severity="error" sx={{ width: '100%' }}>
           {productError?.message ? productError?.message : updateProductError?.message ? updateProductError?.message : ''}

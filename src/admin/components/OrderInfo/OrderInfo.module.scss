@@ -3,7 +3,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
+  width: 600px;
   background-color: #fff;
   padding: 15px 20px 40px 20px;
   border-radius: 10px;
@@ -45,11 +45,13 @@
   display: flex;
 }
 .productImg {
+  min-width: 70px;
   width: 70px;
   height: 70px;
   margin-right: 20px;
 }
 .productNoImage {
+  min-width: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,6 +71,7 @@
   margin-left: auto;
   font-size: 18px;
   font-weight: 600;
+  white-space: nowrap;
 }
 .total {
   padding: 10px;

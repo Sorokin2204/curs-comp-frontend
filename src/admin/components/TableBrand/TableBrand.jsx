@@ -8,19 +8,27 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Edit } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBrands, setActiveBrand } from '../../../redux/slices/brand.slice';
+import { deleteBrand, getBrands, setActiveBrand } from '../../../redux/slices/brand.slice';
+import Loading from '../Loading/Loading';
 const TableBrand = () => {
   const {
     getBrandsState: { data, loading },
+    deleteBrandState: { data: deleteBrandData, loading: deleteLoading },
   } = useSelector((state) => state.brand);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getBrands());
   }, []);
+
+  useEffect(() => {
+    if (deleteBrandData) {
+      dispatch(getBrands());
+    }
+  }, [deleteBrandData]);
 
   return (
     <>
@@ -29,6 +37,7 @@ const TableBrand = () => {
           <Table sx={{ width: '100%' }}>
             <TableHead>
               <TableRow>
+                <TableCell sx={{ width: '40px' }}></TableCell>
                 <TableCell sx={{ width: '40px' }}></TableCell>
                 <TableCell sx={{ width: '50px' }}>ID</TableCell>
                 <TableCell>Название</TableCell>
@@ -50,6 +59,14 @@ const TableBrand = () => {
                       <Edit />
                     </IconButton>
                   </TableCell>
+                  <TableCell sx={{ width: '40px' }}>
+                    <IconButton
+                      onClick={() => {
+                        dispatch(deleteBrand(brand.id));
+                      }}>
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
                   <TableCell component="th" scope="row" sx={{ width: '50px' }}>
                     {brand.id}
                   </TableCell>
@@ -60,6 +77,7 @@ const TableBrand = () => {
           </Table>
         </TableContainer>
       )}
+      {deleteLoading && <Loading />}
     </>
   );
 };
