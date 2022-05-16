@@ -205,7 +205,7 @@ const ProductSinglePage = () => {
               }}>
               {productAttribute.label}
             </div>
-            <div>{productAttribute?.labelOption ? productAttribute?.labelOption : typeof productAttribute.value === 'boolean' ? (productAttribute.value ? '+' : '-') : productAttribute.value}</div>
+            <div>{productAttribute?.optionLabel ? productAttribute?.optionLabel : typeof productAttribute.value === 'boolean' ? (productAttribute.value ? '+' : '-') : productAttribute.value}</div>
           </Box>
         ))}
       </div>

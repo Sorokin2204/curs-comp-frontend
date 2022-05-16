@@ -11,6 +11,7 @@ import ModalSuccess from '../components/ModalSuccess/ModalSuccess';
 import { useNavigate } from 'react-router';
 import Loading from '../../admin/components/Loading/Loading';
 import { SocketContext } from '../../socket';
+import _ from 'lodash';
 const CartPage = () => {
   const socket = useContext(SocketContext);
   const [cartList, setCartList] = useState([]);
@@ -110,10 +111,21 @@ const CartPage = () => {
                     justifyContent: 'space-between',
                   }}>
                   <Typography sx={{ fontSize: '22px', fontWeight: '600' }}>Итог</Typography>
-                  <Typography sx={{ fontSize: '24px', fontWeight: '600' }}>{currencyFormat(10000)}</Typography>
+                  <Typography sx={{ fontSize: '24px', fontWeight: '600' }}>
+                    {}
+                    {currencyFormat(
+                      _.sum(
+                        JSON.parse(localStorage.getItem('cart'))?.map((cartProduct) => {
+                          const findInCart = cartProducts?.find((productInCart) => productInCart?.id === cartProduct?.id);
+                          return findInCart?.price * cartProduct?.quantity;
+                        }),
+                      ),
+                    )}
+                  </Typography>
                 </Box>
                 {authUser ? (
                   <Button
+                    disabled={authUser?.type === 'admin'}
                     onClick={() => {
                       dispatch(
                         createOrder({
@@ -138,8 +150,7 @@ const CartPage = () => {
                       marginTop: '20px',
                       width: '100%',
                     }}
-                    size="large"
-                    disabled={authUser?.type === 'admin'}>
+                    size="large">
                     Оформить
                   </Button>
                 )}
